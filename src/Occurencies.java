@@ -1,28 +1,35 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Occurencies {
     ArrayList <String> word;
-    ArrayList <Integer> count;
+    ArrayList <Double> count;
+    ArrayList <Double> log;
+    private HashMap<String, Double> tab ;
+    static final long occurrences = 95675200;
+
     public Occurencies(){
         this.word = new ArrayList<>();
         this.count = new ArrayList<>();
+        this.log = new ArrayList<>();
+        this.tab = new HashMap<>();
     }
+
     public void add(String word, String count){
         this.word.add(word);
-        Integer intCount = Integer.parseInt(count);
-        this.count.add(intCount);
+        double dcount = Double.parseDouble(count);
+        this.count.add(dcount);
+        double proba = Math.log(dcount/occurrences);
+        this.log.add(proba);
+        tab.put(word,proba);
     }
-    public void print(){
-        for(int i = 0; i < this.word.size(); i++){
-            System.out.println(this.word.get(i)+" : "+this.count.get(i));
-        }
-    }
-    public float getProba(String word){
-        if(this.word.indexOf(word) != -1){
-            return (float) this.count.get(this.word.indexOf(word))/(float) this.count.size();
-        }else{
-            return 0;
-        }
 
+    public void print(){
+
+        System.out.println(tab.get("TION"));
+        System.out.print(word.size());
+    }
+    public double getProba(String word){
+        return tab.get(word);
     }
 }
