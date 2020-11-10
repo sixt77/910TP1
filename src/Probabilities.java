@@ -1,14 +1,15 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Occurencies {
+public class Probabilities {
+
     ArrayList <String> word;
     ArrayList <Double> count;
     ArrayList <Double> log;
     private HashMap<String, Double> tab ;
     static final long occurrences = 95675200;
 
-    public Occurencies(){
+    public Probabilities(){
         this.word = new ArrayList<>();
         this.count = new ArrayList<>();
         this.log = new ArrayList<>();
@@ -25,14 +26,12 @@ public class Occurencies {
     }
 
     public void print(){
+
         System.out.println(tab.get("TION"));
         System.out.print(word.size());
     }
     public double getProba(String word){
-        if(tab.get(word) == null){
-            return Math.log(0.01/occurrences);
-        }else{
-            return tab.get(word);
-        }
+        return tab.get(word);
     }
+
 }
