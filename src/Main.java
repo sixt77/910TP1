@@ -9,5 +9,8 @@ public class Main {
         //oc.print();
         System.out.println(oc.word.size());
         System.out.println(oc.getProba("ENCR"));
+        for(int i = 0; i < data.length()-3; i++){
+            System.out.println(oc.getProba(data.substring(i, i+4)));
+        }
     }
 }

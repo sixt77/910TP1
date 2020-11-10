@@ -18,6 +18,11 @@ public class Occurencies {
         }
     }
     public float getProba(String word){
-        return (float) this.count.get(this.word.indexOf(word))/(float) this.count.size();
+        if(this.word.indexOf(word) != -1){
+            return (float) this.count.get(this.word.indexOf(word))/(float) this.count.size();
+        }else{
+            return 0;
+        }
+
     }
 }
