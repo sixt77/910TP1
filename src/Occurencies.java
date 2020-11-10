@@ -17,4 +17,7 @@ public class Occurencies {
             System.out.println(this.word.get(i)+" : "+this.count.get(i));
         }
     }
+    public float getProba(String word){
+        return (float) this.count.get(this.word.indexOf(word))/(float) this.count.size();
+    }
 }

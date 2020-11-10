@@ -7,7 +7,7 @@ public class Main {
         Occurencies oc = FileTool.buildOccurencies("C:\\Users\\sacha\\test.save");
         String data = FileTool.readFile("C:\\Users\\sacha\\test1.txt");
         //oc.print();
-
+        System.out.println(oc.word.size());
+        System.out.println(oc.getProba("ENCR"));
     }
-
 }
