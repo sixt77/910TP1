@@ -8,7 +8,6 @@ public class Main {
         String data = FileTool.readFile("C:\\Users\\sacha\\test1.txt");
         double sum = 0;
         for(int i = 0; i < data.length()-3; i++){
-            System.out.println(oc.getProba(data.substring(i, i+4)));
             sum = sum + oc.getProba(data.substring(i, i+4));
         }
         System.out.println(sum);

@@ -25,11 +25,14 @@ public class Occurencies {
     }
 
     public void print(){
-
         System.out.println(tab.get("TION"));
         System.out.print(word.size());
     }
     public double getProba(String word){
-        return tab.get(word);
+        if(tab.get(word) == null){
+            return Math.log(0.01/occurrences);
+        }else{
+            return tab.get(word);
+        }
     }
 }
