@@ -10,6 +10,5 @@ public class Main {
         System.out.println();
 
         Playfair pf = new Playfair("microphone");
-        pf.printTable();
     }
 }
