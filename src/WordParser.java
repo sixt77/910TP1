@@ -1,7 +1,7 @@
 
 public class WordParser {
-    private String word;
-    private Probabilities probabilities;
+    private final String word;
+    private final Probabilities probabilities;
     static final long occurrences = 95675200;
 
     public WordParser(String word, Probabilities proba){
@@ -10,10 +10,8 @@ public class WordParser {
     }
 
     public double getProba(){
-        int i=0;
         double res = 0;
-        System.out.println(this.word);
-        while (i<=word.length()-4){
+        for(int i = 0; i < word.length()-3; i++){
             String subword = word.substring(i, i+4);
             try {
                 res += probabilities.getProba(subword);
@@ -21,7 +19,6 @@ public class WordParser {
             catch(Exception e) {
                 res += Math.log(0.01/occurrences);
             }
-            i++;
         }
         return res;
     }
