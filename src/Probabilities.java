@@ -26,12 +26,13 @@ public class Probabilities {
     }
 
     public void print(){
-
-        System.out.println(tab.get("TION"));
-        System.out.print(word.size());
+        System.out.println("print"+tab.get("ABBA"));
+        System.out.println(word.size());
     }
     public double getProba(String word){
-        return tab.get(word);
+        if (tab.containsKey(word))
+            return tab.get(word);
+        else return Math.log(0.01/Main.occurrences);
     }
 
 }

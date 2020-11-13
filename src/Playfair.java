@@ -67,7 +67,6 @@ public class Playfair {
             }
         }
         this.key = keybuild.toString();
-        System.out.println(this.key);
         this.ciperTable = playfairTable;
     }
 
@@ -208,6 +207,9 @@ public class Playfair {
         int a = random.nextInt(key.length());
         random = new Random();
         int b = random.nextInt(key.length());
+        while (b == a){
+            b = random.nextInt(key.length());
+        }
         char temp = key.charAt(a);
         key.setCharAt(a, key.charAt(b));
         key.setCharAt(b, temp);
@@ -216,24 +218,25 @@ public class Playfair {
     }
 
     public String crack(String message){
+        System.out.println("message 0 : "+message);
         String result = decode(message);
         WordParser wp = new WordParser(result, Main.oc);
         double score = wp.getProba();
         String key = this.key;
         System.out.println("message 1 : "+result+" proba : "+score);
+        System.out.println("key 1 : "+key);
 
         for (int i = 0; i < 50000; i++){
+            disturbKey();
             String decoded = decode(message);
             wp = new WordParser(decoded, Main.oc);
             double currentScore = wp.getProba();
-            //System.out.println("message  : "+decode(message)+" proba : "+currentScore);
             if (currentScore > score){
                 score = currentScore;
                 result = decoded;
                 key = this.key;
                 System.out.println("message result : "+decode(message)+" proba : "+score);
             }
-            disturbKey();
         }
         System.out.println("key : " + key + " score : " + score);
         System.out.println();
