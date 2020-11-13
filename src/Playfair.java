@@ -34,7 +34,6 @@ public class Playfair {
     }
 
     private String parseString(String parse) {
-
         parse = parse.toUpperCase();
         parse = parse.replaceAll("[^A-Z]", "");
         parse = parse.replace("J", "I");
@@ -91,7 +90,6 @@ public class Playfair {
                 length = (int) in.length() / 2 + in.length() % 2;
             }
         }
-
         // adds an x to the last digraph, if necessary
         String[] digraph = new String[length];
         for (int j = 0; j < length; j++) {
@@ -99,11 +97,8 @@ public class Playfair {
                 in = in + "X";
             digraph[j] = in.charAt(2 * j) + "" + in.charAt(2 * j + 1);
         }
-
         // encodes the digraphs and returns the output
         StringBuilder out = new StringBuilder();
-//        String[] encDigraphs = new String[length];
-//        encDigraphs = encodePair(digraph);
         for (int k = 0; k < length; k++) {
             out.append(encodePair(digraph[k]));//encDigraphs[k];
         }
@@ -129,22 +124,20 @@ public class Playfair {
         if (r1 == r2) {
             c1 = (c1 + 1) % 5;
             c2 = (c2 + 1) % 5;
-
-            // case 2: letters in digraph are of same column, shift rows down
-        } else if (c1 == c2) {
+        }
+        // case 2: letters in digraph are of same column, shift rows down
+        else if (c1 == c2) {
             r1 = (r1 + 1) % 5;
             r2 = (r2 + 1) % 5;
-
-            // case 3: letters in digraph form rectangle, swap first column # with second column #
-        } else {
+        }
+        // case 3: letters in digraph form rectangle, swap first column # with second column #
+        else {
             int temp = c1;
             c1 = c2;
             c2 = temp;
         }
-
         //performs the table look-up and puts those values into the encoded array
         enc = ciperTable[r1][c1] + "" + ciperTable[r2][c2];
-
         return enc;
     }
 
@@ -174,7 +167,7 @@ public class Playfair {
         return decoded.toString();
     }
 
-    private StringBuilder parseX(StringBuilder decoded) {
+    private void parseX(StringBuilder decoded) {
         if (decoded.charAt(decoded.length() - 1) == 'X') {
             decoded.deleteCharAt(decoded.length() - 1);
         }
@@ -185,7 +178,6 @@ public class Playfair {
             }
             i++;
         }
-        return decoded;
     }
 
     public void printTable() {
@@ -220,17 +212,16 @@ public class Playfair {
     public String crack(String message){
         System.out.println("message 0 : "+message);
         String result = decode(message);
-        WordParser wp = new WordParser(result, Main.oc);
-        double score = wp.getProba();
+        WordParser wp = new WordParser(Main.oc);
+        double score = wp.getProba(result);
         String key = this.key;
-        System.out.println("message 1 : "+result+" proba : "+score);
-        System.out.println("key 1 : "+key);
+        System.out.println("message decoded init : "+result+" proba init : "+score);
+        System.out.println("key init : "+key);
 
         for (int i = 0; i < 50000; i++){
             disturbKey();
             String decoded = decode(message);
-            wp = new WordParser(decoded, Main.oc);
-            double currentScore = wp.getProba();
+            double currentScore = wp.getProba(decoded);
             if (currentScore > score){
                 score = currentScore;
                 result = decoded;
