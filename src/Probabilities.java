@@ -7,7 +7,6 @@ public class Probabilities {
     ArrayList <Double> count;
     ArrayList <Double> log;
     private HashMap<String, Double> tab ;
-    static final long occurrences = 95675200;
 
     public Probabilities(){
         this.word = new ArrayList<>();
@@ -20,7 +19,7 @@ public class Probabilities {
         this.word.add(word);
         double dcount = Double.parseDouble(count);
         this.count.add(dcount);
-        double proba = Math.log(dcount/occurrences);
+        double proba = Math.log(dcount/Main.occurrences);
         this.log.add(proba);
         tab.put(word,proba);
     }

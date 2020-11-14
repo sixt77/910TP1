@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Playfair {
 
-    private final String keyword;
+    private String keyword;
     public String key;
     private String[][] ciperTable;
 
@@ -210,15 +210,13 @@ public class Playfair {
     }
 
     public String crack(String message){
-        System.out.println("message 0 : "+message);
         String result = decode(message);
         WordParser wp = new WordParser(Main.oc);
         double score = wp.getProba(result);
         String key = this.key;
-        System.out.println("message decoded init : "+result+" proba init : "+score);
-        System.out.println("key init : "+key);
 
         for (int i = 0; i < 50000; i++){
+            generateKey(key);
             disturbKey();
             String decoded = decode(message);
             double currentScore = wp.getProba(decoded);
@@ -226,7 +224,6 @@ public class Playfair {
                 score = currentScore;
                 result = decoded;
                 key = this.key;
-                System.out.println("message result : "+decode(message)+" proba : "+score);
             }
         }
         System.out.println("key : " + key + " score : " + score);
