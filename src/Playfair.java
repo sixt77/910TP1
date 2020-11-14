@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class Playfair {
 
     }
 
-    public void inputMessage(){
+    public void inputMessage() {
         Scanner sc = new Scanner(System.in);
         // prompts user for message to be encoded
         System.out.println("Input the message to be encoded");
@@ -23,10 +24,6 @@ public class Playfair {
         System.out.println();
 
         String output = encode(input.toString());
-        generateKey("ZYXWVUTSQLKGFDBAENHPORCIM");
-        System.out.println(decode(output));
-        System.out.println(this.key);
-        printTable();
         System.out.println(output);
         System.out.println(decode(output));
         WordParser wp = new WordParser(decode(output), Main.oc);
@@ -40,6 +37,12 @@ public class Playfair {
         return parse;
     }
 
+    /**
+     * Question 2
+     * Generate a key with a keyword
+     *
+     * @param key keyword or key
+     */
     public void generateKey(String key) {
         String[][] playfairTable = new String[5][5];
         StringBuilder keybuild = new StringBuilder();
@@ -69,6 +72,30 @@ public class Playfair {
         this.ciperTable = playfairTable;
     }
 
+    /**
+     * Question 2
+     * Print the cipher table
+     */
+    public void printTable() {
+        System.out.println("This is the cipher table from " + this.key);
+        System.out.println();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.print(ciperTable[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    /**
+     * Question 3
+     * Get a point in the cipher table
+     *
+     * @param c character to get
+     * @return the "coordinates" of the character
+     */
     private int[] getPoint(char c) {
         int[] pt = new int[2];
         for (int i = 0; i < 5; i++)
@@ -80,35 +107,11 @@ public class Playfair {
         return pt;
     }
 
-    public String encode(String in) {
-        int length = (int) in.length() / 2 + in.length() % 2;
-
-        // insert x between double-letter digraphs & redefines "length"
-        for (int i = 0; i < (length - 1); i++) {
-            if (in.charAt(2 * i) == in.charAt(2 * i + 1)) {
-                in = new StringBuffer(in).insert(2 * i + 1, 'X').toString();
-                length = (int) in.length() / 2 + in.length() % 2;
-            }
-        }
-        // adds an x to the last digraph, if necessary
-        String[] digraph = new String[length];
-        for (int j = 0; j < length; j++) {
-            if (j == (length - 1) && in.length() / 2 == (length - 1))
-                in = in + "X";
-            digraph[j] = in.charAt(2 * j) + "" + in.charAt(2 * j + 1);
-        }
-        // encodes the digraphs and returns the output
-        StringBuilder out = new StringBuilder();
-        for (int k = 0; k < length; k++) {
-            out.append(encodePair(digraph[k]));//encDigraphs[k];
-        }
-        return out.toString();
-    }
-
     /**
+     * Question 3
      * Encode a pair of letter with the Cipher Table
      *
-     * @param di
+     * @param di digramm to decode
      * @return the encoded pair
      */
     public String encodePair(String di) {
@@ -141,11 +144,50 @@ public class Playfair {
         return enc;
     }
 
-    public String decode(String out) {
+    /**
+     * Question 3
+     * Encode a message
+     *
+     * @param message message to encode
+     * @return encrypted message
+     */
+    public String encode(String message) {
+        int length = (int) message.length() / 2 + message.length() % 2;
+
+        // insert x between double-letter digraphs & redefines "length"
+        for (int i = 0; i < (length - 1); i++) {
+            if (message.charAt(2 * i) == message.charAt(2 * i + 1)) {
+                message = new StringBuffer(message).insert(2 * i + 1, 'X').toString();
+                length = message.length() / 2 + message.length() % 2;
+            }
+        }
+        // adds an x to the last digraph, if necessary
+        String[] digraph = new String[length];
+        for (int j = 0; j < length; j++) {
+            if (j == (length - 1) && message.length() / 2 == (length - 1))
+                message = message + "X";
+            digraph[j] = message.charAt(2 * j) + "" + message.charAt(2 * j + 1);
+        }
+        // encodes the digraphs and returns the output
+        StringBuilder out = new StringBuilder();
+        for (int k = 0; k < length; k++) {
+            out.append(encodePair(digraph[k]));//encDigraphs[k];
+        }
+        return out.toString();
+    }
+
+    /**
+     * Question 3
+     * Decode an encrypted message
+     *
+     * @param message Encrypted message to decode
+     * @return decrypted message
+     */
+    public String decode(String message) {
         StringBuilder decoded = new StringBuilder();
-        for (int i = 0; i < out.length() / 2; i++) {
-            char a = out.charAt(2 * i);
-            char b = out.charAt(2 * i + 1);
+        for (int i = 0; i < message.length() / 2; i++) {
+            char a = message.charAt(2 * i);
+            char b = message.charAt(2 * i + 1);
             int r1 = getPoint(a)[0];
             int r2 = getPoint(b)[0];
             int c1 = getPoint(a)[1];
@@ -167,6 +209,11 @@ public class Playfair {
         return decoded.toString();
     }
 
+    /**
+     * Parse the X letters from a decoded message
+     *
+     * @param decoded decoded message
+     */
     private void parseX(StringBuilder decoded) {
         if (decoded.charAt(decoded.length() - 1) == 'X') {
             decoded.deleteCharAt(decoded.length() - 1);
@@ -180,26 +227,19 @@ public class Playfair {
         }
     }
 
-    public void printTable() {
-        System.out.println("This is the cipher table from " + this.key);
-        System.out.println();
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(ciperTable[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
+    /**
+     * Question 4
+     * Disturb Key function
+     *
+     * @return disturbed key
+     */
     public String disturbKey() {
         StringBuilder key = new StringBuilder(this.key);
         Random random = new Random();
         int a = random.nextInt(key.length());
         random = new Random();
         int b = random.nextInt(key.length());
-        while (b == a){
+        while (b == a) {
             b = random.nextInt(key.length());
         }
         char temp = key.charAt(a);
@@ -209,18 +249,25 @@ public class Playfair {
         return key.toString();
     }
 
-    public String crack(String message){
+    /**
+     * Question 5
+     * Crack function
+     *
+     * @param message encrypted message
+     * @return decrypted message
+     */
+    public String crack(String message) {
         String result = decode(message);
         WordParser wp = new WordParser(Main.oc);
         double score = wp.getProba(result);
         String key = this.key;
 
-        for (int i = 0; i < 50000; i++){
+        for (int i = 0; i < 50000; i++) {
             generateKey(key);
             disturbKey();
             String decoded = decode(message);
             double currentScore = wp.getProba(decoded);
-            if (currentScore > score){
+            if (currentScore > score) {
                 score = currentScore;
                 result = decoded;
                 key = this.key;
@@ -229,5 +276,114 @@ public class Playfair {
         System.out.println("key : " + key + " score : " + score);
         System.out.println();
         return result;
+    }
+
+    /**
+     * Question 7
+     * Upgraded disturb key function
+     *
+     * @return the modified key
+     */
+    public String upgradedDisturbKey() {
+        Random random = new Random();
+        int rand = random.nextInt(100);
+
+        if (rand < 90) {
+            disturbKey();
+        } else if (rand < 95)
+            swapRowCol(0);
+        else
+            swapRowCol(1);
+        return this.key;
+    }
+
+    /**
+     * Return a couple of random number between 0 and 4
+     *
+     * @return the pair of numbers
+     */
+    private int[] randomRowCol() {
+        Random random = new Random();
+        int first = random.nextInt(5);
+        int second = random.nextInt(5);
+        while (first == second)
+            second = random.nextInt(5);
+        return new int[]{first, second};
+    }
+
+    /**
+     * Swap two rows or to columns depending on the mode value
+     *
+     * @param mode tell if it's a row or column swap
+     */
+    public void swapRowCol(int mode) {
+        int[] random = randomRowCol();
+        int first = random[0];
+        int second = random[1];
+
+        String temp;
+        if (mode == 0) {
+            for (int i = 0; i < 5; i++) {
+                temp = this.ciperTable[first][i];
+                this.ciperTable[first][i] = this.ciperTable[second][i];
+                this.ciperTable[second][i] = temp;
+            }
+
+        } else {
+            for (int i = 0; i < 5; i++) {
+                temp = this.ciperTable[i][first];
+                this.ciperTable[i][first] = this.ciperTable[i][second];
+                this.ciperTable[i][second] = temp;
+            }
+        }
+
+        StringBuilder key = new StringBuilder();
+        for (String[] strings : this.ciperTable) {
+            for (int j = 0; j < this.ciperTable[0].length; j++) {
+                key.append(strings[j]);
+            }
+        }
+        generateKey(key.toString());
+    }
+
+    /**
+     * Question 8
+     */
+    public String upgradedCrack(String message, double tempInit, double tempStep, double tempFinale, int nbCycle) {
+        String result = decode(message);
+        WordParser wp = new WordParser(Main.oc);
+        double score = wp.getProba(result);
+        double delta;
+        String key = this.key;
+        System.out.println(this.key);
+        int bestKey = 0;
+
+        while (tempInit > tempFinale && bestKey < 20) {
+            System.out.println(tempInit);
+            generateKey(key);
+            System.out.println("clear = " + result + " with score : " + score);
+            double lastScore = score;
+            bestKey ++;
+            for (int k = 1; k <= nbCycle; k++) {
+                generateKey(key);
+                upgradedDisturbKey();
+                String decoded = decode(message);
+                double currentScore = wp.getProba(decoded);
+                delta = score - currentScore;
+                if (delta < 0 || Math.random() < Math.exp((-delta)/tempInit)){
+                    key = this.key;
+                    result = decoded;
+                    score = currentScore;
+                    bestKey = 0;
+                }
+            }
+            System.out.println(bestKey);
+            tempInit -= tempStep;
+        }
+        System.out.println("key : " + key + " score : " + score);
+        System.out.println();
+
+        return result;
+
     }
 }
