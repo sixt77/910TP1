@@ -3,33 +3,16 @@ import java.util.Scanner;
 
 public class Playfair {
 
-    private String keyword;
     public String key;
     private String[][] ciperTable;
 
     public Playfair(String keyword) {
-        this.keyword = parseString(keyword);
-        generateKey(this.keyword);
+        String keyword1 = parseString(keyword);
+        generateKey(keyword1);
 
     }
 
-    public void inputMessage() {
-        Scanner sc = new Scanner(System.in);
-        // prompts user for message to be encoded
-        System.out.println("Input the message to be encoded");
-        StringBuilder input = new StringBuilder(parseString(sc.nextLine()));
-        while (input.toString().equals(""))
-            input.append(parseString(sc.nextLine()));
-        System.out.println();
-
-        String output = encode(input.toString());
-        System.out.println(output);
-        System.out.println(decode(output));
-        WordParser wp = new WordParser(decode(output), Main.oc);
-        System.out.print(wp.getProba());
-    }
-
-    private String parseString(String parse) {
+    public static String parseString(String parse) {
         parse = parse.toUpperCase();
         parse = parse.replaceAll("[^A-Z]", "");
         parse = parse.replace("J", "I");
@@ -151,7 +134,7 @@ public class Playfair {
      * @return encrypted message
      */
     public String encode(String message) {
-        int length = (int) message.length() / 2 + message.length() % 2;
+        int length = message.length() / 2 + message.length() % 2;
 
         // insert x between double-letter digraphs & redefines "length"
         for (int i = 0; i < (length - 1); i++) {
