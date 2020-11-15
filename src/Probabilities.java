@@ -31,7 +31,7 @@ public class Probabilities {
     public double getProba(String word){
         if (tab.containsKey(word))
             return tab.get(word);
-        else return Math.log(0.01/Main.occurrences);
+        else return Math.log(0.01/ Main.occurrences);
     }
 
 }

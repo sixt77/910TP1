@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -230,23 +229,20 @@ public class Playfair {
     /**
      * Question 4
      * Disturb Key function
-     *
-     * @return disturbed key
      */
-    public String disturbKey() {
+    public void disturbKey() {
         StringBuilder key = new StringBuilder(this.key);
         Random random = new Random();
         int a = random.nextInt(key.length());
         random = new Random();
         int b = random.nextInt(key.length());
-        while (b == a) {
+        while (b == a)
             b = random.nextInt(key.length());
-        }
+
         char temp = key.charAt(a);
         key.setCharAt(a, key.charAt(b));
         key.setCharAt(b, temp);
         generateKey(key.toString());
-        return key.toString();
     }
 
     /**
@@ -263,7 +259,7 @@ public class Playfair {
         String key = this.key;
 
         for (int i = 0; i < 50000; i++) {
-            generateKey(key);
+
             disturbKey();
             String decoded = decode(message);
             double currentScore = wp.getProba(decoded);
@@ -272,6 +268,7 @@ public class Playfair {
                 result = decoded;
                 key = this.key;
             }
+            generateKey(key);
         }
         System.out.println("key : " + key + " score : " + score);
         System.out.println();
@@ -281,20 +278,16 @@ public class Playfair {
     /**
      * Question 7
      * Upgraded disturb key function
-     *
-     * @return the modified key
      */
-    public String upgradedDisturbKey() {
+    public void upgradedDisturbKey() {
         Random random = new Random();
         int rand = random.nextInt(100);
-
         if (rand < 90) {
             disturbKey();
         } else if (rand < 95)
             swapRowCol(0);
         else
             swapRowCol(1);
-        return this.key;
     }
 
     /**
@@ -305,6 +298,7 @@ public class Playfair {
     private int[] randomRowCol() {
         Random random = new Random();
         int first = random.nextInt(5);
+        random = new Random();
         int second = random.nextInt(5);
         while (first == second)
             second = random.nextInt(5);
@@ -320,7 +314,6 @@ public class Playfair {
         int[] random = randomRowCol();
         int first = random[0];
         int second = random[1];
-
         String temp;
         if (mode == 0) {
             for (int i = 0; i < 5; i++) {
@@ -354,30 +347,32 @@ public class Playfair {
         WordParser wp = new WordParser(Main.oc);
         double score = wp.getProba(result);
         double delta;
-        String key = this.key;
+        String key = this.key ;
         System.out.println(this.key);
         int bestKey = 0;
 
-        while (tempInit > tempFinale && bestKey < 20) {
-            System.out.println(tempInit);
-            generateKey(key);
+        while (tempInit > tempFinale && bestKey < 5) {
+            System.out.println("Température : " + tempInit);
             System.out.println("clear = " + result + " with score : " + score);
-            double lastScore = score;
-            bestKey ++;
-            for (int k = 1; k <= nbCycle; k++) {
+
+            double lastscore = score;
+            for (int i = 0; i < nbCycle; i++) {
                 generateKey(key);
                 upgradedDisturbKey();
                 String decoded = decode(message);
                 double currentScore = wp.getProba(decoded);
-                delta = score - currentScore;
-                if (delta < 0 || Math.random() < Math.exp((-delta)/tempInit)){
+                delta = wp.getProba(result) - currentScore;
+                if ((delta < 0) || (Math.random() < Math.exp((-delta) / tempInit))) {
                     key = this.key;
                     result = decoded;
                     score = currentScore;
-                    bestKey = 0;
                 }
+                generateKey(key);
             }
-            System.out.println(bestKey);
+            if (lastscore == score)
+                bestKey++;
+            else bestKey = 0;
+            System.out.println("bestkey :" + bestKey);
             tempInit -= tempStep;
         }
         System.out.println("key : " + key + " score : " + score);
